@@ -16,9 +16,6 @@ const UA_STRINGS = require('../utils/ua-strings');
 const BASE_URL = new Buffer('aHR0cHM6Ly93d3cuc3ViZGl2eC5jb20vaW5kZXgucGhw', 'base64').toString('ascii');
 const SEARCH_URL = BASE_URL.concat(new Buffer('P2FjY2lvbj01Jm1hc2Rlc2M9JnN1YnRpdHVsb3M9MSZyZWFsaXphX2I9MSZidXNjYXI9', 'base64').toString('ascii')).concat(term);
 
-// console.log(SEARCH_URL);
-// process.exit(0);
-
 let c = new Crawler({
     rateLimit: Math.floor(Math.random() * 100),
     maxConnections: 1,
@@ -106,10 +103,6 @@ function downloadSubtitle(subtitleLink, fileName) {
                     const exec = require('child_process').exec;
                     let file = spawn('file', ['-b', res.options.filename]);
 
-                    // console.log(file);
-
-                    // file.stdout.on('data', function (data) {});
-
                     let fileType = '';
                     file.stdout.on('data', (type) => {
                         console.log(`stdout: ${type}`);
@@ -164,39 +157,8 @@ function downloadSubtitle(subtitleLink, fileName) {
                     compressedFile.close();
                 });
 
-                // a.close(function (data) {
-                //     a.write(chunk)
-                //     console.log('closed1');
-                //     a.close(console.log.bind(null, 'closed2'));
-                // });
-
-
             }
             done();
-            // writeStream.on('close', () => {
-
-            // process.exit(0);
-
-            // });
-
-            // const kill = require('tree-kill');
-            // const spawn = require('child_process').spawn;
-            // const exec = require('child_process').exec;
-            // let fileType = spawn('file', ['-b', res.options.filename]);
-
-            // console.log(fileType);
-
-            // fileType.stdout.on('data', function (data) {
-            //     console.log(`stdout: ${data}`);
-            // });
-
-            // fileType.stderr.on('data', function (data) {
-            //     console.log(`stderr: ${data}`);
-            // });
-
-            // fileType.stdin.on('data', function (data) {
-            //     console.log(`stdin: ${data}`);
-            // });
         }
     });
 

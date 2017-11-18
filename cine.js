@@ -53,10 +53,6 @@ let c = new Crawler({
 							process.exit(1);
 						} else {
 							let $ = res.$;
-							//let lista = $('iframe').toArray();
-
-							// console.log('Búśćáńdó éń: ' + $('title').text());
-							// console.log($('body').text());
 							let rx = new RegExp(/atob\(\"(.*)\"\)/, 'gi');
 							let a = $('body').text().match(rx);
 							let streamURL = new Buffer(a[0].replace(/atob\(\"|\"\)/g, ''), 'base64').toString('ascii');
