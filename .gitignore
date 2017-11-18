@@ -4,7 +4,6 @@
 *.m4v
 *.mp4
 *.srt
-*.php
 *.meta
 /torrents/**/*
 
