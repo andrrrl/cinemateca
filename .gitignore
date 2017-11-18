@@ -5,6 +5,8 @@
 *.mp4
 *.srt
 *.php
+*.meta
+/torrents/**/*
 
 # Logs
 logs
