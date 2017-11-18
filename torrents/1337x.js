@@ -2,7 +2,7 @@ require('colors');
 
 let term = encodeURIComponent(process.argv[2]) || false;
 
-if (!term) {
+if (!term || term === 'undefined') {
     console.log('Usage: $ node 1337x.js "my search"'.bold.red);
     process.exit(1);
 }
