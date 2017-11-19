@@ -25,14 +25,17 @@ let c = new Crawler({
         } else {
             let $ = res.$;
             let list = $('.coll-1.name a:not(.icon)').toArray();
+            let se = $('.coll-2.seeds').toArray();
+            let le = $('.coll-3.leeches').toArray();
+            let si = $('.coll-4.size').toArray();
 
             console.log('Búśćáńdó éń: ' + $('title').text());
-
+            
             let downloadList = [];
             let i = 1;
 
             list.forEach(element => {
-                console.log((i < 10 ? ' ' + (i) : i) + ' ' + element.children[0].data + ' * ' + '(' + element.attribs.href + ')');
+                console.log((i < 10 ? ' ' + (i) : i) + ' ' + element.children[0].data + '\t\tsize: ' + si[i-1].children[0].data + ' | se: ' + se[i-1].children[0].data + ' | le: ' + le[i-1].children[0].data);
 
                 downloadList.push({
                     name: element.children[0].data,
@@ -94,11 +97,11 @@ function addMagnetLink(magnetLink) {
     });
 
     child.stderr.on('data', function (data) {
-        console.log(`stderr: ${data}`);
+        // console.log(`stderr: ${data}`);
     });
 
     child.stdin.on('data', function (data) {
-        console.log(`stdin: ${data}`);
+        // console.log(`stdin: ${data}`);
     });
 
     child.on('close', function () {
