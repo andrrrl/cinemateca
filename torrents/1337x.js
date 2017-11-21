@@ -35,7 +35,8 @@ let c = new Crawler({
             let i = 1;
 
             list.forEach(element => {
-                console.log((i < 10 ? ' ' + (i) : i) + ' ' + element.children[0].data + '\t\tsize: ' + si[i-1].children[0].data + ' | se: ' + se[i-1].children[0].data + ' | le: ' + le[i-1].children[0].data);
+                console.log((i < 10 ? ' ' + (i) : i) + ' ' + element.children[0].data + 
+                '\t\tsize: ' + si[i-1].children[0].data + ' | se: ' + se[i-1].children[0].data + ' | le: ' + le[i-1].children[0].data);
 
                 downloadList.push({
                     name: element.children[0].data,

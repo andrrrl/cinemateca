@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Activar la confirmación de borrado del .srt original
+confirmar=0
+
+input="$1"
+
+ext="${input##*.}"
+
+output="${input::-3}utf8.$ext"
+
+printf "Convirtiendo a UTF-8 %s ==> %s...\n" "$input" "$output"
+
+iconv -f iso8859-1 -t utf-8 "$input" > "$output"
+
+if [[ $confirmar == 1 ]]; then
+	printf "\e[1m\e[31mBorrar archivo original \"%s\"? (s/n)\e[21m\e[39m\n" "$input"
+	read borrar
+
+	if [[ "$borrar" =~ ^[sS]$ ]]; then
+		rm "$input"
+		echo "Listo."	
+	fi
+else
+	
+	rm "$input"
+	echo "Listo."
+	
+fi

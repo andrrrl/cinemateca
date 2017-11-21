@@ -26,7 +26,9 @@ let c = new Crawler({
             process.exit(1);
         } else {
             let $ = res.$;
+            
             let list = $('.titulo_menu_izq').toArray();
+			let desc = $('#buscador_detalle_sub').toArray();
 
             console.log('Búśćáńdó éń: ' + $('title').text());
 
@@ -34,7 +36,7 @@ let c = new Crawler({
             let i = 1;
 
             list.forEach(element => {
-                console.log((i < 10 ? ' ' + (i) : i) + ' ' + element.children[0].data + ' * ' + '(' + element.attribs.href + ')');
+                console.log((i < 10 ? ' ' + (i) : i) + ' ' + element.children[0].data + '\n\t' + '(' + desc[i-1].children[0].data + ')');
 
                 downloadList.push({
                     name: element.children[0].data,
@@ -142,13 +144,16 @@ function downloadSubtitle(subtitleLink, fileName) {
                             console.log(subtitle);
                             let extract = spawn(tool, [extractArg, res.options.filename, subtitle]);
                             extract.on('close', () => {
-                                exec('rm ' + res.options.filename);
-                                let slugified = slugify(subtitle);
-                                let rename = spawn('mv', [subtitle, slugified]);
-                                rename.on('close', () => {
-                                    kill(rename.pid);
-                                });
-                                kill(extract.pid);
+								let slugified = slugify(subtitle);
+								let rename = spawn('mv', [subtitle, slugified]);
+								rename.on('close', () => {
+									let latin2utf8 = spawn('../utils/latin2utf8', [slugified]);
+									latin2utf8.on('close', () => {
+									exec('rm ' + res.options.filename);
+									kill(latin2utf8.pid);
+h										kill(rename.pid);
+								kill(extract.pid);
+									});
                             });
                             kill(subtitleFile.pid);
                         });
