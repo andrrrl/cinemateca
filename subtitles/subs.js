@@ -63,9 +63,14 @@ let c = new Crawler({
                             process.exit(1);
                         } else {
                             let $ = res.$;
-                            let subtitles = $('.detalle_link').toArray();
+
+                            console.log($('a'));
+
+                            // let subtitles = $('.detalle_link').toArray();
+                            let subtitles = $('.link1').toArray();
 
                             console.log('ḌÒẈṆĻÓÀḌÏŅĜ: ' + $('title').text());
+                            // console.log(subtitles.map(x => x.attribs));
 
                             let subtitle = subtitles.find(x => x.attribs.href.match('bajar'));
                             downloadSubtitle(subtitle.attribs.href, downloadList[answer - 1].name);
@@ -120,7 +125,7 @@ function downloadSubtitle(subtitleLink, fileName) {
                             scriptArgsList = ['-Z', '-l', res.options.filename];
                             extractArg = '-q';
                         } else if (fileType.match(/rar/ig)) {
-                            tool = 'unrar-nonfree';
+                            tool = 'unrar-free';
                             scriptArgsList = ['lb', res.options.filename];
                             extractArg = 'e';
                         }
@@ -151,7 +156,8 @@ function downloadSubtitle(subtitleLink, fileName) {
 									latin2utf8.on('close', () => {
 									exec('rm ' + res.options.filename);
 									kill(latin2utf8.pid);
-h										kill(rename.pid);
+								});
+									kill(rename.pid);
 								kill(extract.pid);
 									});
                             });
