@@ -7,6 +7,9 @@
 *.meta
 /torrents/**/*
 
+# Screenshots
+*.png
+
 # Logs
 logs
 *.log
