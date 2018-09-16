@@ -1,4 +1,5 @@
 require('colors');
+const path = require('path');
 
 let term = encodeURIComponent(process.argv[2]) || false;
 
@@ -50,9 +51,9 @@ let c = new Crawler({
                 input: process.stdin,
                 output: process.stdout
             });
-
+            
             rl.question('ŜÜḄṬÏŢĻÈ #: ', (answer) => {
-
+                answer = 1;
                 let d = new Crawler({
                     rateLimit: Math.floor(Math.random() * 100),
                     maxConnections: 1,
@@ -84,12 +85,12 @@ let c = new Crawler({
             });
         }
         done();
+        
     }
 });
 c.queue(SEARCH_URL);
 
 function downloadSubtitle(subtitleLink, fileName) {
-
     console.log(`Saving subtitle file: ${subtitleLink}`);
 
     let d2 = new Crawler({
@@ -129,12 +130,14 @@ function downloadSubtitle(subtitleLink, fileName) {
                             scriptArgsList = ['lb', res.options.filename];
                             extractArg = 'e';
                         }
+                        console.log('scriptArgsList', scriptArgsList);
 
                         let subtitleFile = spawn(tool, scriptArgsList);
 
                         let subtitle = '';
                         subtitleFile.stdout.on('data', function (data) {
                             subtitle = data.toString().split('\n').find(x => x.match(/(.*)\.srt$/gi));
+                            subtitle = subtitle[0] === ' ' ? subtitle.slice(1) : subtitle;
                         });
 
                         subtitleFile.stderr.on('data', function (data) {
@@ -144,22 +147,24 @@ function downloadSubtitle(subtitleLink, fileName) {
                         subtitleFile.stdin.on('data', function (data) {
                             console.log(`stdin: ${data}`);
                         });
-
+                        
                         subtitleFile.on('close', function () {
                             console.log(subtitle);
+                            
                             let extract = spawn(tool, [extractArg, res.options.filename, subtitle]);
+                            console.log([extractArg, res.options.filename, subtitle]);
                             extract.on('close', () => {
 								let slugified = slugify(subtitle);
 								let rename = spawn('mv', [subtitle, slugified]);
 								rename.on('close', () => {
-									let latin2utf8 = spawn('../utils/latin2utf8', [slugified]);
+									let latin2utf8 = spawn(path.join(__dirname, '../utils/latin2utf8'), [slugified]);
 									latin2utf8.on('close', () => {
-									exec('rm ' + res.options.filename);
-									kill(latin2utf8.pid);
-								});
+									    exec('rm ' + res.options.filename);
+									    kill(latin2utf8.pid);
+								    });
 									kill(rename.pid);
-								kill(extract.pid);
-									});
+								    kill(extract.pid);
+                                });
                             });
                             kill(subtitleFile.pid);
                         });
