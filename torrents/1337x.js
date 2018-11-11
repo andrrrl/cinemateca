@@ -3,7 +3,7 @@ require('colors');
 let term = encodeURIComponent(process.argv[2]) || false;
 
 if (!term || term === 'undefined') {
-    console.log('Usage: $ node 1337x.js "my search"'.bold.red);
+    console.log(`Usage: $ node ${BASE_URL.replace('http://', '')} "my search"`.bold.red);
     process.exit(1);
 }
 
@@ -13,6 +13,24 @@ const readline = require('readline');
 const UA_STRINGS = require('../utils/ua-strings');
 const BASE_URL = new Buffer('aHR0cDovLzEzMzd4LnRv', 'base64').toString('ascii');
 const URL = new Buffer('aHR0cDovLzEzMzd4LnRvL3NyY2g/c2VhcmNoPQ==', 'base64').toString('ascii').concat(term);
+
+function listTorrents(torrentList){
+    let downloadList = [];
+    let i = 1;
+    torrentList.forEach(element => {
+        console.log((i < 10 ? ' ' + (i) : i) + ' ' + element.children[0].data + 
+        '\t\tsize: ' + si[i-1].children[0].data + ' | se: ' + se[i-1].children[0].data + ' | le: ' + le[i-1].children[0].data);
+
+        downloadList.push({
+            name: element.children[0].data,
+            href: element.attribs.href
+        });
+
+        i++;
+    });
+
+    return downloadList;
+}
 
 let c = new Crawler({
     rateLimit: Math.floor(Math.random() * 1000),
@@ -31,20 +49,9 @@ let c = new Crawler({
 
             console.log('Búśćáńdó éń: ' + $('title').text());
             
-            let downloadList = [];
-            let i = 1;
+            
 
-            list.forEach(element => {
-                console.log((i < 10 ? ' ' + (i) : i) + ' ' + element.children[0].data + 
-                '\t\tsize: ' + si[i-1].children[0].data + ' | se: ' + se[i-1].children[0].data + ' | le: ' + le[i-1].children[0].data);
-
-                downloadList.push({
-                    name: element.children[0].data,
-                    href: element.attribs.href
-                });
-
-                i++;
-            });
+            listTorrents(list);
 
             const rl = readline.createInterface({
                 input: process.stdin,
@@ -94,7 +101,7 @@ function addMagnetLink(magnetLink) {
     let child = spawn(torrentClient, scriptArgs);
 
     child.stdout.on('data', function (data) {
-        console.log(`stdout: ${data}`);
+        console.log(`${data}`);
     });
 
     child.stderr.on('data', function (data) {
