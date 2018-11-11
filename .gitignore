@@ -5,7 +5,7 @@
 *.mp4
 *.srt
 *.meta
-/torrents/**/*
+/torrents/**
 
 # Screenshots
 *.png
