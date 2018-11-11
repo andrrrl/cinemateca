@@ -20,7 +20,7 @@ const readline = require('readline');
 
 const UA_STRINGS = require('../utils/ua-strings');
 
-function getTorrentPage(htmlList, titleKey = ''){
+function getTorrentPage(htmlList, titleKey = '') {
     let downloadList = [];
 
     htmlList.forEach((element, i) => {
@@ -29,18 +29,18 @@ function getTorrentPage(htmlList, titleKey = ''){
                 title: element.attribs.title,
                 href: element.attribs.href
             });
-        } else if(element.attribs['data-magnet']) {
-                downloadList.push({
-                    title: titleKey,
-                    href: element.attribs['data-magnet']
-                });
+        } else if (element.attribs['data-magnet']) {
+            downloadList.push({
+                title: titleKey,
+                href: element.attribs['data-magnet']
+            });
         }
     });
 
     return downloadList;
 }
 
-function listTorrentPage(htmlList, details = null){
+function listTorrentPage(htmlList, details = null) {
     let torrentDetails = details && details.length ? details : null;
     htmlList.forEach((element, i) => {
         i++;
@@ -66,7 +66,7 @@ let crawlSearchPage = new Crawler({
             let si = $('.coll-4.size').toArray();
 
             console.log('Búśćáńdó éń: ' + $('title').text());
-            
+
             // Filter list of torrents that match the search terms
             let torrentList = getTorrentPage(list, 'title', 'href');
 
@@ -91,19 +91,48 @@ let crawlSearchPage = new Crawler({
                             process.exit(1);
                         } else {
                             let $ = res.$;
-                            
-                            let magnets = $('[data-magnet]').toArray();
+
+                            // let magnets = $('[data-magnet]').toArray();
                             let details = $('tr').toArray();
+                            let magnets = $('tr td div.downa').toArray();
+                            // console.log(magnets);
+                            // process.exit(0);
                             // details = details.map(x => x.children.map(y => y.data)).filter(y => typeof y[0] === 'string');
 
-                            console.log(details.map(tr => tr.children.map(td => td.data)));
-                            process.exit(1);
+                            // console.log(details.length);
+                            let children = details.map(x => x.children);
+
+                            children.shift();
+
+                            let filas = [];
+                            children.forEach((child, index) => {
+                                let columnas = [];
+                                child.forEach(chch => {
+                                    if (chch.children && chch.children.length > 0) {
+                                        for (let i = 0; i < 4; i++) {
+                                            if (typeof chch.children[i] !== 'undefined') {
+                                                // if (chch.attribs.class === 'center button-movie-control white') {
+                                                columnas.push(chch.children[i].data);
+                                                // } else {
+                                                // console.log(magnets[index].attribs['data-magnet']);
+                                                // columnas.push((chch.children[i].data));
+                                            }
+                                            // console.log(chch.children[i]);
+                                        }
+                                        // }
+                                    }
+                                });
+                                if (magnets[index].attribs.class === 'center button-movie-control white') {
+                                    filas.push([...magnets[index].attribs.data.magnet, columnas]);
+                                }
+                                console.log((index + 1) + columnas.join(' ').replace(/\n/g, ''));
+                            });
 
                             // Filter list of torrents that match the search terms
-                            let downloadList = getTorrentPage(magnets, torrentList[answer - 1].title);
+                            // let downloadList = getTorrentPage(magnets, torrentList[answer - 1].title);
 
-                            // LIst the results
-                            listTorrentPage(downloadList, details);
+                            // List the results
+                            // listTorrentPage(downloadList, details);
 
                             const rl2 = readline.createInterface({
                                 input: process.stdin,
@@ -112,35 +141,24 @@ let crawlSearchPage = new Crawler({
 
                             // Select single result
                             rl2.question('ṬÓŔṚẸṆṬ DôẄNḶÔÄḐ: ', (answer) => {
-                            let crawlTorrents = new Crawler({
-                                rateLimit: Math.floor(Math.random() * 1000),
-                                maxConnections: 1,
-                                rotateUA: UA_STRINGS,
-                                callback: function (error, res, done) {
-                                    if (error) {
-                                        console.log(error);
-                                        process.exit(1);
-                                    } else {
-                                        let $ = res.$;
 
-                                        let magnets = $('[data-magnet]').toArray();
 
-                                        console.log('magnets', magnets);
-                                        // process.exit(0);
-                                        
-                                    //     console.log('ṬÓŔṚẸṆṬ ÄḌḐȨḌ: ' + $('title').text());
-                                    //     addMagnetLink(magnets[0].attribs.href);
-                                    }
-                                    done();
-                                }
+                                // let magnets = $('[data-magnet]').toArray();
+
+                                // console.log('magnets', magnets);
+                                // process.exit(0);
+
+                                //     console.log('ṬÓŔṚẸṆṬ ÄḌḐȨḌ: ' + $('title').text());
+                                //     addMagnetLink(magnets[0].attribs.href);
+                                // console.log(magnets[answer - 1].children);
+                                // process.exit(0);
+                                addMagnetLink(magnets[answer - 1].attribs['data-magnet']);
+                                // crawlTorrents.queue(downloadList[answer - 1].href);
+                                rl2.close();
+                                console.log('ṬÓŔṚẸṆṬ ÄḌḐȨḌ: ' + $('title').text());
+
                             });
-                            crawlTorrents.queue(downloadList[answer - 1].href);
-                            rl2.close();
-                            console.log('ṬÓŔṚẸṆṬ ÄḌḐȨḌ: ' + $('title').text());
-                            // addMagnetLink(magnets[0].attribs.href);
 
-                        });
-            
 
                         }
                         done();
