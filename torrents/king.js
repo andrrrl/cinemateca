@@ -48,8 +48,6 @@ function listTorrentPage(htmlList, details = null) {
     });
 }
 
-
-
 let crawlSearchPage = new Crawler({
     rateLimit: Math.floor(Math.random() * 1000),
     maxConnections: 1,
@@ -95,11 +93,7 @@ let crawlSearchPage = new Crawler({
                             // let magnets = $('[data-magnet]').toArray();
                             let details = $('tr').toArray();
                             let magnets = $('tr td div.downa').toArray();
-                            // console.log(magnets);
-                            // process.exit(0);
-                            // details = details.map(x => x.children.map(y => y.data)).filter(y => typeof y[0] === 'string');
 
-                            // console.log(details.length);
                             let children = details.map(x => x.children);
 
                             children.shift();
@@ -111,15 +105,9 @@ let crawlSearchPage = new Crawler({
                                     if (chch.children && chch.children.length > 0) {
                                         for (let i = 0; i < 4; i++) {
                                             if (typeof chch.children[i] !== 'undefined') {
-                                                // if (chch.attribs.class === 'center button-movie-control white') {
                                                 columnas.push(chch.children[i].data);
-                                                // } else {
-                                                // console.log(magnets[index].attribs['data-magnet']);
-                                                // columnas.push((chch.children[i].data));
                                             }
-                                            // console.log(chch.children[i]);
                                         }
-                                        // }
                                     }
                                 });
                                 if (magnets[index].attribs.class === 'center button-movie-control white') {
@@ -128,12 +116,6 @@ let crawlSearchPage = new Crawler({
                                 console.log((index + 1) + columnas.join(' ').replace(/\n/g, ''));
                             });
 
-                            // Filter list of torrents that match the search terms
-                            // let downloadList = getTorrentPage(magnets, torrentList[answer - 1].title);
-
-                            // List the results
-                            // listTorrentPage(downloadList, details);
-
                             const rl2 = readline.createInterface({
                                 input: process.stdin,
                                 output: process.stdout
@@ -141,19 +123,7 @@ let crawlSearchPage = new Crawler({
 
                             // Select single result
                             rl2.question('ṬÓŔṚẸṆṬ DôẄNḶÔÄḐ: ', (answer) => {
-
-
-                                // let magnets = $('[data-magnet]').toArray();
-
-                                // console.log('magnets', magnets);
-                                // process.exit(0);
-
-                                //     console.log('ṬÓŔṚẸṆṬ ÄḌḐȨḌ: ' + $('title').text());
-                                //     addMagnetLink(magnets[0].attribs.href);
-                                // console.log(magnets[answer - 1].children);
-                                // process.exit(0);
                                 addMagnetLink(magnets[answer - 1].attribs['data-magnet']);
-                                // crawlTorrents.queue(downloadList[answer - 1].href);
                                 rl2.close();
                                 console.log('ṬÓŔṚẸṆṬ ÄḌḐȨḌ: ' + $('title').text());
 
